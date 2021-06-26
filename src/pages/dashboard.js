@@ -1,16 +1,16 @@
 import React, { useState } from 'react'
 import './dashboard.css'
 
-import { GoogleMap, Marker } from 'react-google-maps'
+import { GoogleMap, Marker, withGoogleMap } from 'react-google-maps'
 
-const MapComponent = (props) => {
+const MapComponent = withGoogleMap((props) => {
   return (
-    <GoogleMap defaultZoom={8} defaultCenter={{ lat: -34.397, lng: 150.644 }}>
+    <GoogleMap defaultZoom={8} defaultCenter={props.source}>
       <Marker position={props.source} />
       <Marker position={props.destination} />
     </GoogleMap>
   )
-}
+})
 
 function Dashboard() {
   const [sourceName, setSourceName] = useState('')
@@ -65,7 +65,7 @@ function Dashboard() {
       longitude: 73.135,
     },
   ])
-  const getDistanceMatrix = async (origin, destination) => {
+  const getDistanceMatrix = async () => {
     let sourceLat, sourceLong
     let destinationLat, destinationLong
 
@@ -99,6 +99,7 @@ function Dashboard() {
         },
       },
       function (response, status) {
+        alert(status)
         setDistance(response.rows[0].elements[0].distance['text'])
         setDistanceMeters(response.rows[0].elements[0].distance['value'])
         setDuration(response.rows[0].elements[0].duration_in_traffic['text'])
@@ -158,7 +159,7 @@ function Dashboard() {
           />
         </div>
         <div className='button'>
-          <button className='btn' onclick='initMap()'>
+          <button className='btn' onClick={getDistanceMatrix}>
             Search
           </button>
         </div>
@@ -172,6 +173,9 @@ function Dashboard() {
           <MapComponent
             source={sourceDetails}
             destination={destinationDetails}
+            loadingElement={<div style={{ height: `100%` }} />}
+            containerElement={<div style={{ height: `400px` }} />}
+            mapElement={<div style={{ height: `100%` }} />}
           />
         </div>
       </div>
