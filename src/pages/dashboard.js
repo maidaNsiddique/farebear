@@ -4,8 +4,13 @@ import './dashboard.css'
 import { GoogleMap, Marker, withGoogleMap } from 'react-google-maps'
 
 const MapComponent = withGoogleMap((props) => {
+  console.log(props.source)
+  console.log(props.destination)
   return (
-    <GoogleMap defaultZoom={8} defaultCenter={props.source}>
+    <GoogleMap defaultZoom={8} defaultCenter={{
+      lat: 33.7166,
+      lng: 73.042
+    }}>
       <Marker position={props.source} />
       <Marker position={props.destination} />
     </GoogleMap>
@@ -15,10 +20,10 @@ const MapComponent = withGoogleMap((props) => {
 function Dashboard() {
   const [sourceName, setSourceName] = useState('')
   const [destinationName, setDestinationName] = useState('')
-  const [distanceMeters, setDistanceMeters] = useState('')
+  const [uberRate, setUberRate] = useState(0)
+  const [lyftRate, setLyftRate] = useState(0)
+  const [taxiRate, setTaxiRate] = useState(0)
   const [duration, setDuration] = useState('')
-  const [durationSecs, setDurationSecs] = useState('')
-  const [showOptions, setShowOptions] = useState(false)
   const [sourceDetails, setSourceDetails] = useState({})
   const [destinationDetails, setDestinationDetails] = useState({})
 
@@ -159,9 +164,9 @@ function Dashboard() {
       (duration / 60) * 0.15 * taxi.minute
     taxiPrice = taxiPrice.toFixed(2)
 
-    alert(`Uber rate: ${uberPrice}`)
-    alert(`Lyft rate: ${lyftPrice}`)
-    alert(`Taxi rate: ${taxiPrice}`)
+    setUberRate(uberPrice)
+    setLyftRate(lyftPrice)
+    setTaxiRate(taxiPrice)
   }
 
   return (
@@ -220,6 +225,9 @@ function Dashboard() {
       <div className='wrapper'>
         <div>
           <p>Main Area</p>
+          <span>Uber: {uberRate}</span>
+          <span>Lyft: {lyftRate}</span>
+          <span>Taxi: {taxiRate}</span>
         </div>
         <div id='map'>
           <div id='msg'></div>
