@@ -1,80 +1,80 @@
-import React, { useState, useEffect } from "react";
-import fire from './pages/firebase';
-import './App.css';
+import React, { useState, useEffect } from 'react'
+import fire from './pages/firebase'
+import './App.css'
 import Login from './pages/login.js'
-import Dashboard from "./pages/dashboard";
+import Dashboard from './pages/dashboard'
 const App = () => {
-  const [user, setUser] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [hasAccount, setHasAccount] = useState(false);
+  const [user, setUser] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [emailError, setEmailError] = useState('')
+  const [passwordError, setPasswordError] = useState('')
+  const [hasAccount, setHasAccount] = useState(false)
 
   const clearInputs = () => {
-    setEmail('');
-    setPassword('');
+    setEmail('')
+    setPassword('')
   }
 
   const clearErrors = () => {
-    setEmailError('');
-    setPasswordError('');
+    setEmailError('')
+    setPasswordError('')
   }
 
   const handleLogin = (e) => {
     e.preventDefault()
-    clearErrors();
+    clearErrors()
     fire
       .auth()
       .signInWithEmailAndPassword(email, password)
       .catch((err) => {
         alert(err)
         switch (err.code) {
-          case "auth/invalid-email":
-          case "auth/user-disabled":
-          case "auth/user-not-found":
-            setEmailError(err.message);
-            break;
-          case "auth/wrong-password":
-            setPasswordError(err.message);
-            break;
+          case 'auth/invalid-email':
+          case 'auth/user-disabled':
+          case 'auth/user-not-found':
+            setEmailError(err.message)
+            break
+          case 'auth/wrong-password':
+            setPasswordError(err.message)
+            break
         }
-      });
-  };
+      })
+  }
   const handleSignup = (e) => {
     e.preventDefault()
-    clearErrors();
+    clearErrors()
     fire
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .catch((err) => {
         switch (err.code) {
-          case "auth/email-already-in-use":
-          case "auth/invalid-email":
-            setEmailError(err.message);
-            break;
-          case "auth/weak-password":
-            setPasswordError(err.message);
-            break;
+          case 'auth/email-already-in-use':
+          case 'auth/invalid-email':
+            setEmailError(err.message)
+            break
+          case 'auth/weak-password':
+            setPasswordError(err.message)
+            break
         }
-      });
-  };
+      })
+  }
   const handleLogout = () => {
-    fire.auth().signOut();
-  };
+    fire.auth().signOut()
+  }
   const authListener = () => {
     fire.auth().onAuthStateChanged((user) => {
       if (user) {
-        clearInputs();
-        setUser(user);
+        clearInputs()
+        setUser(user)
       } else {
-        setUser("");
+        setUser('')
       }
-    });
-  };
+    })
+  }
   useEffect(() => {
-    authListener();
-  }, []);
+    authListener()
+  }, [])
 
   return (
     <div>
@@ -95,7 +95,7 @@ const App = () => {
         />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
