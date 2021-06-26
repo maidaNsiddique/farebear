@@ -8,5 +8,12 @@ var firebaseConfig = {
   appId: '1:979963027209:web:56409f0e1f308ce1847dd8',
   measurementId: 'G-GREHVT5B9R',
 }
-const fire = firebase.initializeApp(firebaseConfig)
+
+let fire
+if (!firebase.apps.length) {
+  fire = firebase.initializeApp(firebaseConfig)
+} else {
+  fire = firebase.app(); // if already initialized, use that one
+}
+
 export default fire
