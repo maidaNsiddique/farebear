@@ -15,7 +15,6 @@ const MapComponent = withGoogleMap((props) => {
 function Dashboard() {
   const [sourceName, setSourceName] = useState('')
   const [destinationName, setDestinationName] = useState('')
-  const [distance, setDistance] = useState('')
   const [distanceMeters, setDistanceMeters] = useState('')
   const [duration, setDuration] = useState('')
   const [durationSecs, setDurationSecs] = useState('')
@@ -65,7 +64,24 @@ function Dashboard() {
       longitude: 73.135,
     },
   ])
-  const getDistanceMatrix = async () => {
+
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    var radlat1 = (Math.PI * lat1) / 180
+    var radlat2 = (Math.PI * lat2) / 180
+    var theta = lon1 - lon2
+    var radtheta = (Math.PI * theta) / 180
+    var dist =
+      Math.sin(radlat1) * Math.sin(radlat2) +
+      Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta)
+    dist = Math.acos(dist)
+    dist = (dist * 180) / Math.PI
+    dist = dist * 60 * 1.1515
+    dist = dist * 1.609344
+
+    return dist
+  }
+
+  const getDistanceMatrix = () => {
     let sourceLat, sourceLong
     let destinationLat, destinationLong
 
@@ -86,29 +102,66 @@ function Dashboard() {
     setSourceDetails({ lat: sourceLat, lng: sourceLong })
     setDestinationDetails({ lat: destinationLat, lng: destinationLong })
 
-    let service = new window.google.maps.DistanceMatrixService()
+    let lyft = {
+      initial: 2.5,
+      service: 2.5,
+      minute: 0.33,
+      kilometer: 0.65,
+      minFare: 5.0,
+      maxFare: 400,
+      cancellation: 5.0,
+    }
 
-    service.getDistanceMatrix(
-      {
-        origins: [sourceDetails], //origin
-        destinations: [destinationDetails], //destination
-        travelMode: 'DRIVING',
-        drivingOptions: {
-          departureTime: new Date(Date.now()), // for the time N milliseconds from now.
-          trafficModel: 'bestguess',
-        },
-      },
-      function (response, status) {
-        alert(status)
-        setDistance(response.rows[0].elements[0].distance['text'])
-        setDistanceMeters(response.rows[0].elements[0].distance['value'])
-        setDuration(response.rows[0].elements[0].duration_in_traffic['text'])
-        setDurationSecs(
-          response.rows[0].elements[0].duration_in_traffic['value'],
-        )
-        setShowOptions(true)
-      },
+    let uber = {
+      initial: 2.5,
+      service: 2.0,
+      minute: 0.33,
+      kilometer: 0.7,
+      minFare: 6.0,
+      maxFare: '',
+      cancellation: 5.0,
+    }
+
+    let taxi = {
+      flag: 3.35,
+      kilometer: 1.93,
+      minute: 0.57,
+    }
+
+    let uberPrice, lyftPrice, taxiPrice
+
+    let distance = calculateDistance(
+      sourceLat,
+      sourceLong,
+      destinationLat,
+      destinationLong,
     )
+
+    uberPrice =
+      (distance / 1000) * uber.kilometer +
+      (duration / 60) * uber.minute +
+      uber.initial +
+      uber.service
+    uberPrice =
+      uberPrice > uber.minFare ? uberPrice.toFixed(2) : uber.minFare.toFixed(2)
+
+    lyftPrice =
+      (distance / 1000) * lyft.kilometer +
+      (duration / 60) * lyft.minute +
+      lyft.initial +
+      lyft.service
+    lyftPrice =
+      lyftPrice > lyft.minFare ? lyftPrice.toFixed(2) : lyft.minFare.toFixed(2)
+
+    taxiPrice =
+      taxi.flag +
+      (distance / 1000) * taxi.kilometer +
+      (duration / 60) * 0.15 * taxi.minute
+    taxiPrice = taxiPrice.toFixed(2)
+
+    alert(`Uber rate: ${uberPrice}`)
+    alert(`Lyft rate: ${lyftPrice}`)
+    alert(`Taxi rate: ${taxiPrice}`)
   }
 
   return (
