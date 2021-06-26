@@ -13,7 +13,7 @@ let fire
 if (!firebase.apps.length) {
   fire = firebase.initializeApp(firebaseConfig)
 } else {
-  fire = firebase.app(); // if already initialized, use that one
+  fire = firebase.app() // if already initialized, use that one
 }
 
 export default fire
