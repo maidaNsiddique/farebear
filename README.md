@@ -19,3 +19,4 @@ A group project developed by
 ![Navigation Diagram](nv.png)
 
 #### Testing from windows 
+without ssh
