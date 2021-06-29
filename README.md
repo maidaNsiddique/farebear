@@ -16,4 +16,4 @@ A group project developed by
 
 ### Navigation Diagram
 
-![Navigation Diagram] (/src/nv.png)
+![Navigation Diagram] (nv.png)
