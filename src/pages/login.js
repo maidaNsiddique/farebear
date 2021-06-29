@@ -1,5 +1,6 @@
 import React from 'react'
 import './login.css'
+//import FormBG from '../static/images/loginbg.png'
 const Login = (props) => {
   {
     const {
@@ -15,6 +16,7 @@ const Login = (props) => {
       passwordError,
     } = props
     return (
+      //<div style={{ backgroundImage: `url(${FormBG})` , height: '100%' }} >
       <div>
         <section className='main'>
           <form>
@@ -77,7 +79,9 @@ const Login = (props) => {
           </form>
         </section>
       </div>
+      //</div>
     )
   }
 }
+
 export default Login

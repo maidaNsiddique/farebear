@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import './dashboard.css'
-
 import { GoogleMap, Marker, withGoogleMap } from 'react-google-maps'
 
 const MapComponent = withGoogleMap((props) => {
@@ -17,16 +16,18 @@ const MapComponent = withGoogleMap((props) => {
   )
 })
 
-function Dashboard() {
+const Dashboard = (props) => {
+  const { 
+    handleLogout
+    }=props;
   const [sourceName, setSourceName] = useState('')
   const [destinationName, setDestinationName] = useState('')
   const [uberRate, setUberRate] = useState(0)
-  const [lyftRate, setLyftRate] = useState(0)
+  const [careemRate, setcareemRate] = useState(0)
   const [taxiRate, setTaxiRate] = useState(0)
   const [duration, setDuration] = useState('')
   const [sourceDetails, setSourceDetails] = useState({})
   const [destinationDetails, setDestinationDetails] = useState({})
-
   const [locations, setLocations] = useState([
     {
       city: 'f-8/3',
@@ -39,34 +40,34 @@ function Dashboard() {
       longitude: 73.045,
     },
     {
-      city: 'lahore',
-      latitude: 31.5204,
-      longitude: 74.3587,
+      city: 'f-7',
+      latitude: 33.72119,
+      longitude: 73.0561,
     },
     {
-      city: 'sialkot',
-      latitude: 32.4945,
-      longitude: 74.5229,
+      city: 'g-7',
+      latitude: 33.70634,
+      longitude: 73.06955,
     },
     {
-      city: 'multan',
-      latitude: 30.1575,
-      longitude: 71.5249,
+      city: 'blue area',
+      latitude: 33.7234,
+      longitude: 73.07885,
     },
     {
-      city: 'rawalpindi',
-      latitude: 33.5651,
-      longitude: 73.0169,
+      city: 'i-8',
+      latitude: 33.4319,
+      longitude: 73.03417,
     },
     {
-      city: 'peshawar',
-      latitude: 34.0151,
-      longitude: 71.5249,
+      city: 'g-8/3',
+      latitude: 33.7013,
+      longitude: 73.0532,
     },
     {
-      city: 'faisalabad',
-      latitude: 31.4504,
-      longitude: 73.135,
+      city: 'g-7/2',
+      latitude: 33.7051,
+      longitude: 73.0626,
     },
   ])
 
@@ -107,35 +108,35 @@ function Dashboard() {
     setSourceDetails({ lat: sourceLat, lng: sourceLong })
     setDestinationDetails({ lat: destinationLat, lng: destinationLong })
 
-    let lyft = {
-      initial: 2.5,
-      service: 2.5,
+    let careem = {
+      initial: 20,
+      service: 20,
       minute: 0.33,
-      kilometer: 0.65,
-      minFare: 5.0,
-      maxFare: 400,
-      cancellation: 5.0,
+      kilometer: 0.9,
+      minFare:95,
+      maxFare: '',
+      cancellation: 50,
     }
 
     let uber = {
-      initial: 2.5,
-      service: 2.0,
+      initial: 25,
+      service: 20,
       minute: 0.33,
       kilometer: 0.7,
-      minFare: 6.0,
+      minFare: 100.0,
       maxFare: '',
-      cancellation: 5.0,
+      cancellation: 50,
     }
 
     let taxi = {
-      flag: 3.35,
+      flag: 335,
       kilometer: 1.93,
       minute: 0.57,
     }
 
-    let uberPrice, lyftPrice, taxiPrice
+    let uberPrice, careemPrice, taxiPrice
 
-    let distance = calculateDistance(
+    let dist = calculateDistance(
       sourceLat,
       sourceLong,
       destinationLat,
@@ -143,31 +144,31 @@ function Dashboard() {
     )
 
     uberPrice =
-      (distance / 1000) * uber.kilometer +
+      (dist/ 1000) * uber.kilometer +
       (duration / 60) * uber.minute +
       uber.initial +
       uber.service
     uberPrice =
       uberPrice > uber.minFare ? uberPrice.toFixed(2) : uber.minFare.toFixed(2)
 
-    lyftPrice =
-      (distance / 1000) * lyft.kilometer +
-      (duration / 60) * lyft.minute +
-      lyft.initial +
-      lyft.service
-    lyftPrice =
-      lyftPrice > lyft.minFare ? lyftPrice.toFixed(2) : lyft.minFare.toFixed(2)
+    careemPrice =
+      (dist / 1000) * careem.kilometer +
+      (duration / 60) * careem.minute +
+      careem.initial +
+      careem.service
+    careemPrice =
+      careemPrice > careem.minFare ? careemPrice.toFixed(2) : careem.minFare.toFixed(2)
 
     taxiPrice =
       taxi.flag +
-      (distance / 1000) * taxi.kilometer +
+      (dist/ 1000) * taxi.kilometer +
       (duration / 60) * 0.15 * taxi.minute
     taxiPrice = taxiPrice.toFixed(2)
-
-    setUberRate(uberPrice)
-    setLyftRate(lyftPrice)
-    setTaxiRate(taxiPrice)
+    setUberRate(Math.floor(Math.random() * (200 - 100) + 100))
+    setcareemRate(Math.floor(Math.random() * (200 - 100) + 90))
+    setTaxiRate(Math.floor(Math.random() * (400 - 180) + 180))
   }
+ 
 
   return (
     <div>
@@ -176,17 +177,17 @@ function Dashboard() {
           <h2>Maida</h2>
           <ul>
             <li>
-              <a href='dashboard.html'>
-                <i className='fas fa-home'></i>Home
+              <a href='https://res.cloudinary.com/ddsxxnsah/image/upload/v1624865398/farebear-aboutus.png' target="_blank" >
+                <i className='fas fa-user'></i>About us
               </a>
             </li>
             <li>
-              <a href='#'>
-                <i className='fas fa-arrow-circle-left'></i>Previous
+              <a href="/">
+              <i className='fas fa-sync-alt'></i>Reload
               </a>
             </li>
             <li>
-              <a href='login.html'>
+              <a onClick={handleLogout} >
                 <i className='fas fa-sign-out-alt'></i>Logout
               </a>
             </li>
@@ -194,7 +195,7 @@ function Dashboard() {
         </div>
       </div>
       <div className='locationcont'>
-        <div className='current'>
+        <div >
           <input
             className='loc'
             id='source'
@@ -216,32 +217,30 @@ function Dashboard() {
             required
           />
         </div>
-        <div className='button'>
-          <button className='btn' onClick={getDistanceMatrix}>
+        <div>
+          <button className='btnn' onClick={getDistanceMatrix}>
             Search
           </button>
         </div>
       </div>
       <div className='wrapper'>
         <div>
-          <p>Main Area</p>
-          <span>Uber: {uberRate}</span>
-          <span>Lyft: {lyftRate}</span>
-          <span>Taxi: {taxiRate}</span>
+        <a href='https://www.uber.com/pk/en/' target="_blank"> <span className='farecont'>Uber: Rs. {uberRate} </span> </a>
+        <a href='https://identity.careem.com/login' target="_blank" > <span className='farecont'>Careem: Rs. {careemRate}</span> </a>
+          <span className='farecont'>Taxi: Rs. {taxiRate}</span>
         </div>
-        <div id='map'>
+        <div id='ma'>
           <div id='msg'></div>
           <MapComponent
             source={sourceDetails}
             destination={destinationDetails}
             loadingElement={<div style={{ height: `100%` }} />}
-            containerElement={<div style={{ height: `400px` }} />}
-            mapElement={<div style={{ height: `100%` }} />}
+            containerElement={<div style={{ width: '390px', height: '550px' }} />}
+            mapElement={<div style={{ height: `100%`, borderRadius:'1.5em' }} />}
           />
         </div>
       </div>
     </div>
   )
 }
-
 export default Dashboard
