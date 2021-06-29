@@ -1,6 +1,6 @@
 # Demo
 
-See demo here ---> [Farebear](farebear.netlify.app)
+See demo here ---> [Farebear](https://farebear.netlify.app/)
 
 ## Introduction
 
@@ -11,8 +11,9 @@ provided and make an optimal decision as per their choice.
 ### 6th semester project
 
 A group project developed by
-[Maida Afzal](https://github.com/maidaNsiddique)
-[Quratulain Aisha] (https://github.com/QuratulAinAisha)
+* [Maida Afzal](https://github.com/maidaNsiddique)
+* [Quratulain Aisha](https://github.com/QuratulAinAisha)
 
 ### Navigation Diagram
 
+![Navigation Diagram] (/src/nv.png)
